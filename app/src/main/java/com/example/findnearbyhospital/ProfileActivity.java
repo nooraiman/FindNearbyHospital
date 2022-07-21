@@ -20,6 +20,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class ProfileActivity extends AppCompatActivity {
 
     Button submit,home;
@@ -90,9 +93,21 @@ public class ProfileActivity extends AppCompatActivity {
         String name = e1.getText().toString();
         String email = e2.getText().toString();
         String phone = e3.getText().toString();
-        User user = new User(name, email, phone);
+        String userAgent = System.getProperty("http.agent");
 
-        db.child(this.user.getUid()).child("info").setValue(user);
+        User usr = new User(name, email, phone);
+
+        db.child(this.user.getUid()).child("info").setValue(usr);
+        db.child(this.user.getUid()).child("ua").setValue(userAgent);
+
+        Map<String, Object> loc = new HashMap<>();
+        loc.put("latitude", "");
+        loc.put("longitude", "");
+        loc.put("address", "");
+        loc.put("timestamp", "");
+
+        db.child(this.user.getUid()).child("location").setValue(loc);
+
         Toast.makeText(this, "User profile has been updated!", Toast.LENGTH_SHORT).show();
     }
 }

@@ -3,7 +3,7 @@ package com.example.findnearbyhospital;
 import java.util.ArrayList;
 
 public class User {
-    String UID, name, email, phone;
+    String UID, name, email, phone, user_agent;
 
     public User() {}
 
@@ -12,8 +12,10 @@ public class User {
         this.name = n;
         this.email = e;
         this.phone = p;
+        this.user_agent = "";
     }
 
+    public void setUA(String u) { this.user_agent = u; }
     public void setUID(String id) { this.UID = id; }
     public void setName(String n) { this.name = n; }
     public void setEmail(String e) { this.email = e; }

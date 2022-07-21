@@ -79,25 +79,6 @@ public class NearbyPlace extends AsyncTask<Object, String, String> {
             markerOptions.title(placeName + " : "+ vicinity);
             markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
 
-            // Add info to user
-//            user.setNearbyPlace(placeName, vicinity, lat, lng);
-            // we are use add value event listener method
-            // which is called with database reference.
-
-//            db.addValueEventListener(new ValueEventListener() {
-//                @Override
-//                public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                    // inside the method of on Data change we are setting
-//                    // our object class to our database reference.
-//                    // data base reference will sends data to firebase.
-//                    db.setValue(user);
-//                }
-//
-//                @Override
-//                public void onCancelled(@NonNull DatabaseError error) {
-//                }
-//            });
-
             mMap.addMarker(markerOptions);
             mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
             mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
