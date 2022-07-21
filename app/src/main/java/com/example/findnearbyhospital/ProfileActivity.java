@@ -2,6 +2,7 @@ package com.example.findnearbyhospital;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -53,36 +54,29 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
-
-        db.addValueEventListener(new ValueEventListener() {
+        submit.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot datasnapshot) {
-                for (DataSnapshot keyID : datasnapshot.getChildren() ){
+            public void onClick(View view) {
+                    updateUser();
+            }
+        });
 
-                    if(keyID.child("email").getValue().toString().equals(email) ){
-                        name = keyID.child("name").getValue().toString();
-                        phone = keyID.child("phone").getValue().toString();
-                        option=1;
-                    }
-                }
+        db.child(user.getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                String name = (String) dataSnapshot.child("info").child("name").getValue();
+                String email = (String) dataSnapshot.child("info").child("email").getValue();
+                String phone = (String) dataSnapshot.child("info").child("phone").getValue();
+
                 e1.setText(name);
+                e2.setText(email);
                 e3.setText(phone);
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+            public void onCancelled(DatabaseError databaseError) {
 
-            }
-        });
-
-        submit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(option == 0 ){
-                    insertUser();
-                } else if(option == 1) {
-                    updateUser();
-                }
             }
         });
     }
@@ -92,41 +86,13 @@ public class ProfileActivity extends AppCompatActivity {
         startActivity(i);
     }
 
-    public void insertUser(){
-        String name = e1.getText().toString();
-        String email = e2.getText().toString();
-        String phone = e3.getText().toString();
-
-        User user = new User(name,email,phone);
-        String id = db.push().getKey();
-        db.child(id).setValue(user);
-        Toast.makeText(this, "User profile has been updated!", Toast.LENGTH_SHORT).show();
-    }
-
     public void updateUser() {
         String name = e1.getText().toString();
         String email = e2.getText().toString();
         String phone = e3.getText().toString();
         User user = new User(name, email, phone);
 
-        db.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot datasnapshot) {
-                for (DataSnapshot keyID : datasnapshot.getChildren() ){
-
-                    if(keyID.child("email").getValue().equals(email) ){
-                        keys = keyID.getKey();
-                        DatabaseReference db1 = db.child(keys);
-                        db1.setValue(user);
-                        Toast.makeText(getApplicationContext(), "User profile has been updated!", Toast.LENGTH_LONG).show();
-                    }
-                }
-
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
+        db.child(this.user.getUid()).child("info").setValue(user);
+        Toast.makeText(this, "User profile has been updated!", Toast.LENGTH_SHORT).show();
     }
 }

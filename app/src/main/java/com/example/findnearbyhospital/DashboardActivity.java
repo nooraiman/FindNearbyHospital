@@ -21,11 +21,11 @@ import com.google.firebase.database.ValueEventListener;
 
 public class DashboardActivity extends AppCompatActivity {
     TextView userName;
-    String name,email;
+    String UID, name,email;
+
     Button hospital,developer,out,userprofile;
     DatabaseReference db = FirebaseDatabase.getInstance("https://findnearby-823cd-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("users");
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-    FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,27 +33,9 @@ public class DashboardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
 
-        email = user.getEmail();
+        String UID = user.getUid();
+        email = user.getEmail().toString();
         userName = (TextView)findViewById(R.id.profileName);
-
-        db.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot datasnapshot) {
-                for (DataSnapshot keyID : datasnapshot.getChildren() ){
-
-                    if(keyID.child("email").getValue().equals(email) ){
-                        name = keyID.child("name").getValue().toString();
-                        userName.setText(name);
-                    }
-                }
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
 
         // User Profile
         userprofile = (Button) findViewById(R.id.btnuserprofile);

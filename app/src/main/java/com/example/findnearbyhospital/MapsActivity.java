@@ -2,6 +2,8 @@ package com.example.findnearbyhospital;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
@@ -31,6 +33,18 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 // FragmentActivity
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback,
@@ -46,6 +60,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public static final int REQUEST_LOCATION_CODE = 99;
     int PROXIMITY_RADIUS = 15000;
     double latitude,longitude;
+
+    DatabaseReference db = FirebaseDatabase.getInstance("https://findnearby-823cd-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("users");
+    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
     TextView tv;
     Button b;
@@ -75,6 +92,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                             buildGoogleApiClient();
                         }
                         mMap.setMyLocationEnabled(true);
+                        mMap.getUiSettings().setMyLocationButtonEnabled(true);
                     }
                 } else {
                     Toast.makeText(this, "Permission Denied", Toast.LENGTH_LONG).show();
@@ -115,6 +133,31 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         longitude = location.getLongitude();
         lastlocation = location;
 
+        // Get Current Timestamp
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String timestamp  = dateFormat.format(new Date());
+
+        // Get Current Location Details
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+
+        String address = null;
+
+        try {
+            List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
+            address = addresses.get(0).getAddressLine(0);
+        } catch (IOException ioe) {
+            Log.d("IOE",ioe.getMessage().toString());
+        }
+
+        Map<String, Object> loc = new HashMap<>();
+        loc.put("latitude", latitude);
+        loc.put("longitude", longitude);
+        loc.put("address", address);
+        loc.put("timestamp", timestamp);
+
+        db.child(this.user.getUid()).child("location").setValue(loc);
+
+
         if(currentLocationmMarker != null)
         {
             currentLocationmMarker.remove();
@@ -136,7 +179,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-    public void onClick(View v)
+        public void onClick(View v)
     {
         Object dataTransfer[] = new Object[2];
         NearbyPlace getNearbyPlacesData = new NearbyPlace(this);

@@ -39,6 +39,7 @@ public class LoginActivity extends AppCompatActivity {
                             if(task.isSuccessful()){
                                 Toast.makeText(getApplicationContext(),"User has successfully login!",Toast.LENGTH_SHORT).show();
                                 finish();
+                                mAuth.getCurrentUser().getUid();
                                 Intent i = new Intent(getApplicationContext(), DashboardActivity.class);
                                 startActivity(i);
                             }else{
