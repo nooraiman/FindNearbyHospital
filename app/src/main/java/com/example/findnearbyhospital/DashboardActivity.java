@@ -21,7 +21,7 @@ import com.google.firebase.database.ValueEventListener;
 
 public class DashboardActivity extends AppCompatActivity {
     TextView userName;
-    String UID, name,email;
+    String email;
 
     Button hospital,developer,out,userprofile;
     DatabaseReference db = FirebaseDatabase.getInstance("https://findnearby-823cd-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("users");
@@ -33,9 +33,27 @@ public class DashboardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
 
-        String UID = user.getUid();
-        email = user.getEmail().toString();
         userName = (TextView)findViewById(R.id.profileName);
+
+        db.child(user.getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String name="";
+                if(dataSnapshot.child("info").child("name").exists()) {
+                    name = (String) dataSnapshot.child("info").child("name").getValue();
+                    userName.setText(name);
+                }
+                else {
+                    userName.setText("");
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        email = user.getEmail().toString();
 
         // User Profile
         userprofile = (Button) findViewById(R.id.btnuserprofile);
