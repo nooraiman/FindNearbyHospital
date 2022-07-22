@@ -19,8 +19,6 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAwR9dPP_8fNOST3SM9MgglOmE4M45jFNY" />
 
-<!--        <meta-data android:name="com.google.android.gms.version"-->
-<!--            android:value="@integer/google_play_services_version" />-->
         <activity
             android:name=".MapsActivity"
             android:label="Find Nearby Hospital"
@@ -51,7 +49,6 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

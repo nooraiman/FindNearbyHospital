@@ -30,9 +30,6 @@ public class NearbyPlace extends AsyncTask<Object, String, String> {
     private GoogleMap mMap;
     String url;
     MapsActivity context;
-    private User user = new User();
-    DatabaseReference db = FirebaseDatabase.getInstance("https://findnearby-823cd-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("users");
-    FirebaseUser fbUser = FirebaseAuth.getInstance().getCurrentUser();
 
     public NearbyPlace(MapsActivity context) {
         this.context = context;
@@ -54,11 +51,10 @@ public class NearbyPlace extends AsyncTask<Object, String, String> {
 
     @Override
     protected void onPostExecute(String s){
-
         List<HashMap<String, String>> nearbyPlaceList;
         DataParser parser = new DataParser();
         nearbyPlaceList = parser.parse(s);
-        Log.d("nearbyplacesdata","invoke parse method");
+
         showNearbyPlaces(nearbyPlaceList);
     }
 
@@ -78,12 +74,10 @@ public class NearbyPlace extends AsyncTask<Object, String, String> {
             markerOptions.position(latLng);
             markerOptions.title(placeName + " : "+ vicinity);
             markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
-
             mMap.addMarker(markerOptions);
             mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
             mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
         }
-//    Log.d("obj", Arrays.toString(user.getNearbyPlace().toArray(new Object[0])));
     }
 
 }

@@ -64,9 +64,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     DatabaseReference db = FirebaseDatabase.getInstance("https://findnearby-823cd-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("users");
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-    TextView tv;
-    Button b;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -123,7 +120,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected synchronized void buildGoogleApiClient() {
         client = new GoogleApiClient.Builder(this).addConnectionCallbacks(this).addOnConnectionFailedListener(this).addApi(LocationServices.API).build();
         client.connect();
-
     }
 
     @Override
@@ -149,14 +145,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             Log.d("IOE",ioe.getMessage().toString());
         }
 
-        Map<String, Object> loc = new HashMap<>();
-        loc.put("latitude", latitude);
-        loc.put("longitude", longitude);
+        Map<String, String> loc = new HashMap<>();
+        loc.put("latitude", Double.toString(latitude));
+        loc.put("longitude", Double.toString(longitude));
         loc.put("address", address);
         loc.put("timestamp", timestamp);
 
         db.child(this.user.getUid()).child("location").setValue(loc);
-
 
         if(currentLocationmMarker != null)
         {
@@ -179,36 +174,32 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-        public void onClick(View v)
+    public void onClick(View v)
     {
         Object dataTransfer[] = new Object[2];
         NearbyPlace getNearbyPlacesData = new NearbyPlace(this);
-
         switch(v.getId())
         {
-
             case R.id.btn_Hospital:
                 mMap.clear();
                 String hospital = "hospital";
                 String url = getUrl(latitude, longitude, hospital);
                 dataTransfer[0] = mMap;
                 dataTransfer[1] = url;
-
                 getNearbyPlacesData.execute(dataTransfer);
                 Toast.makeText(MapsActivity.this, "Showing Nearby Hospitals", Toast.LENGTH_SHORT).show();
                 break;
         }
     }
 
-    private String getUrl(double latitude , double longitude , String nearbyPlace)
+    private String getUrl(Double latitude , Double longitude , String nearbyPlace)
     {
-
         StringBuilder googlePlaceUrl = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
-        googlePlaceUrl.append("location="+latitude+","+longitude);
+        googlePlaceUrl.append("location="+latitude.toString()+","+longitude.toString());
         googlePlaceUrl.append("&radius="+PROXIMITY_RADIUS);
         googlePlaceUrl.append("&type="+nearbyPlace);
         googlePlaceUrl.append("&sensor=true");
-        googlePlaceUrl.append("&key="+"AIzaSyDchJcax-K0n-DotznYhcPJnnGm-rd7CTg");
+        googlePlaceUrl.append("&key="+"AIzaSyAwR9dPP_8fNOST3SM9MgglOmE4M45jFNY");
 
         Log.d("MapsActivity", "url = "+googlePlaceUrl.toString());
 

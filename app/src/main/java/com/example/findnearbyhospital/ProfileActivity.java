@@ -28,8 +28,7 @@ public class ProfileActivity extends AppCompatActivity {
     Button submit,home;
     EditText e1, e2, e3;
 
-    String name,phone,email, keys;
-    int option=0;
+    String email;
 
     DatabaseReference db = FirebaseDatabase.getInstance("https://findnearby-823cd-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("users");
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
