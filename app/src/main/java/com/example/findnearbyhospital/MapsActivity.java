@@ -134,7 +134,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         lastlocation = location;
 
         // Get Current Timestamp
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
         String timestamp  = dateFormat.format(new Date());
 
         // Get Current Location Details
